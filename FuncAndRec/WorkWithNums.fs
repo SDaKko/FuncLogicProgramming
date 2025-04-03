@@ -64,14 +64,20 @@ let find (gcdNum: int -> int  -> int) num (p1: int -> bool) (p2: int -> bool) (p
 let gcdFindPredicats  num =
     find gcd num isOdd isNotPrime (fun _ -> false)
 
+let choice (num, arg) =
+    match num with 
+    | 1 -> Console.WriteLine($"Максимальный простой делитель числа = {maxPrimeDivider arg}")
+    | 2 -> Console.WriteLine($"Произведение цифр числа, не делящихся на 5 = {multNumsDivOnFive arg}") 
+    | 3 -> Console.WriteLine($"НОД максимального нечетного непростого делителя числа и прозведения цифр данного числа = {gcdFindPredicats arg}") 
+    | _ -> Console.WriteLine("Введен неверный номер функции!")
 
 [<EntryPoint>]
 let main args =
-    let maxDivider = maxPrimeDivider 85
-    let multNotDivOnFive = multNumsDivOnFive 122750
-    let gcdFind = gcdFindPredicats 1250
-    Console.WriteLine($"Максимальный простой делитель числа = {maxDivider}")
-    Console.WriteLine($"Произведение цифр числа, не делящихся на 5 = {multNotDivOnFive}")
-    Console.WriteLine($"НОД максимального нечетного непростого делителя числа и прозведения цифр данного числа = {gcdFind}")
+    Console.WriteLine("Введите номер функции (1-3): ")
+    let num = Console.ReadLine() |> int
+    Console.WriteLine("Введите аргумент функции: ")
+    let arg = Console.ReadLine() |> int
+    let tuple = (num, arg)
+    choice(tuple)
 
     0
