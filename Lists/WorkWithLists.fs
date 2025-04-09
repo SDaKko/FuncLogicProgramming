@@ -1,4 +1,4 @@
-open System
+﻿open System
 
 //Вариант 9
 let rec readList n = 
@@ -69,3 +69,52 @@ let elementsBeforeLastMinClassList (list: int list) =
         |> List.findIndex (fun x -> x = minValue)
         |> fun i -> list.Length - 1 - i
     list |> List.take lastMinIndex
+  
+//Задание 12. Дан целочисленный массив. Необходимо осуществить циклический сдвиг элементов массива вправо на одну позицию.
+// 1. Функция сбора элементов
+let rec collectLast last acc = function
+    | [] -> (last, acc)
+    | [x] -> (x, acc)
+    | head :: tail -> collectLast last (acc @ [head]) tail
+
+// 2. Основная функция
+let cyclicShiftRight list =
+    match list with
+    | [] -> []
+    | [x] -> [x]
+    | head :: tail -> 
+        let (last, front) = collectLast head [head] tail
+        last :: front
+
+let cyclicShiftRightClassList list =
+    match List.length list with
+    | 0 -> []
+    | 1 -> list
+    | len ->
+        let last = List.last list
+        let front = List.take (len - 1) list
+        last :: front
+
+
+
+
+[<EntryPoint>]
+let main args = 
+    
+    let list = readData
+    Console.WriteLine("Исходный список:")
+    writeList list
+    let listBeforeMin = elementsBeforeLastMin list
+    Console.WriteLine("Список до последнего минимального элемента:")
+    writeList listBeforeMin
+    let listBeforeMinClassList = elementsBeforeLastMinClassList list
+    Console.WriteLine("Список до последнего минимального элемента (методы List):")
+    writeList listBeforeMinClassList
+    let listAfterShift = cyclicShiftRight list
+    Console.WriteLine("Список после сдвига вправо:")
+    writeList listAfterShift
+    let listAfterShiftClass = cyclicShiftRightClassList list
+    Console.WriteLine("Список после сдвига вправо (методы List):")
+    writeList listAfterShiftClass
+
+    0
