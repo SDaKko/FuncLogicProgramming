@@ -97,7 +97,7 @@ let cyclicShiftRightClassList list =
 
 
 //Задание 13. Дан целочисленный массив и интервал a..b. Необходимо проверить наличие максимального элемента массива в этом интервале.
-// 1. Функция поиска максимального элемента (хвостовая рекурсия)
+// 1. Функция поиска максимального элемента 
 let rec findMaxRec currentMax = function
     | [] -> currentMax
     | head :: tail ->
@@ -122,6 +122,27 @@ let isMaxInIntervalClassList list a b =
     else
         let maxElement = List.max list
         isInRange maxElement a b
+
+//Задание 14. Дан целочисленный массив. Необходимо вывести вначале его элементы с четными индексами, а затем - с нечетными.
+let splitEvenOddIndices list =
+    let rec collectInOrder evenAcc oddAcc index = function
+        | [] -> (evenAcc, oddAcc)
+        | head :: tail ->
+            if index % 2 = 0 then
+                collectInOrder (evenAcc @ [head]) oddAcc (index + 1) tail
+            else
+                collectInOrder evenAcc (oddAcc @ [head]) (index + 1) tail
+    
+    let (evens, odds) = collectInOrder [] [] 0 list
+    evens @ odds
+
+let splitEvenOddIndicesClassList list =
+    let indexed = List.indexed list  // Преобразуем в список пар (индекс, значение)
+    let evens = indexed |> List.filter (fun (i, _) -> i % 2 = 0) |> List.map snd //snd - функция возвращает второй элемент кортежа
+    let odds = indexed |> List.filter (fun (i, _) -> i % 2 = 1) |> List.map snd
+    List.append evens odds
+
+
 
 
 [<EntryPoint>]
@@ -148,5 +169,11 @@ let main args =
     let isMaxElemIntervalClassList = isMaxInIntervalClassList list 25 35
     Console.WriteLine("Есть ли маскимальный элемент в интервале (методы List):")
     Console.WriteLine(isMaxElemIntervalClassList)
+    let listEvenOdd = splitEvenOddIndices list
+    Console.WriteLine("Список элементов сначала с четными, затем с нечетными индексами:")
+    writeList listEvenOdd
+    let listEvenOddClassList = splitEvenOddIndicesClassList list
+    Console.WriteLine("Список элементов сначала с четными, затем с нечетными индексами (методы List):")
+    writeList listEvenOddClassList
 
     0
