@@ -142,6 +142,67 @@ let splitEvenOddIndicesClassList list =
     let odds = indexed |> List.filter (fun (i, _) -> i % 2 = 1) |> List.map snd
     List.append evens odds
 
+//Задание 15. Для введенного списка положительных чисел построить список всех положительных простых делителей элементов списка без повторений.
+let rec countDividers num temp count =
+    match temp with
+    | 0 -> count
+    | _ -> if (num%temp=0) then countDividers num (temp-1) (count+1) 
+           else countDividers num (temp-1) count
+
+let isPrime num =
+    let count = countDividers num num 0
+    match count with
+    | 2 -> true
+    | _ -> false
+
+// Получение простых делителей числа 
+let getPrimeDivisors n =
+    let rec findDivisors acc d =
+        if d > n then acc
+        elif n % d = 0 && isPrime d then
+            findDivisors (acc @ [d]) (d + 1)
+        else
+            findDivisors acc (d + 1)
+    findDivisors [] 2
+
+// Проверка наличия элемента в списке
+let rec exists predicate = function
+    | [] -> false
+    | head :: tail -> predicate head || exists predicate tail
+
+// Объединение списков без дубликатов 
+let rec mergeUnique acc lst =
+    match lst with
+    | [] -> acc
+    | head :: tail ->
+        if exists (fun y -> y = head) acc then
+            mergeUnique acc tail
+        else
+            mergeUnique (acc @ [head]) tail
+
+// Основная функция 
+let getAllPrimeDivisors list =
+    let rec collect acc = function
+        | [] -> acc
+        | head :: tail ->
+            let divisors = getPrimeDivisors head
+            let newAcc = mergeUnique acc divisors
+            collect newAcc tail
+    
+    collect [] list
+
+//Используя методы класса List
+// Получение простых делителей с использованием List.filter
+let getPrimeDivisorsClassList n =
+    [2..n] 
+    |> List.filter (fun d -> n % d = 0 && isPrime d)
+
+// Основная функция с использованием List.collect и List.distinct
+let getAllPrimeDivisorsClassList list =
+    list
+    |> List.collect getPrimeDivisors  // Собираем все делители
+    |> List.distinct                  // Удаляем дубликаты
+    |> List.sort                     // Сортируем
 
 
 
@@ -175,5 +236,11 @@ let main args =
     let listEvenOddClassList = splitEvenOddIndicesClassList list
     Console.WriteLine("Список элементов сначала с четными, затем с нечетными индексами (методы List):")
     writeList listEvenOddClassList
+    let listDivisors = getAllPrimeDivisors list
+    Console.WriteLine("Список уникальных простых делителей чисел:")
+    writeList listDivisors
+    let listDivisorsClassList = getAllPrimeDivisorsClassList list
+    Console.WriteLine("Список уникальных простых делителей чисел (методы List):")
+    writeList listDivisorsClassList
 
     0
