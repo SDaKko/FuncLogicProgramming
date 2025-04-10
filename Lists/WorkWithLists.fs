@@ -96,6 +96,32 @@ let cyclicShiftRightClassList list =
         last :: front
 
 
+//Задание 13. Дан целочисленный массив и интервал a..b. Необходимо проверить наличие максимального элемента массива в этом интервале.
+// 1. Функция поиска максимального элемента (хвостовая рекурсия)
+let rec findMaxRec currentMax = function
+    | [] -> currentMax
+    | head :: tail ->
+        let newMax = if head > currentMax then head else currentMax
+        findMaxRec newMax tail
+
+// 2. Функция проверки попадания числа в интервал
+let isInRange number a b =
+    a <= number && number <= b
+
+// 3. Основная функция
+let isMaxInInterval list a b =
+    match list with
+    | [] -> false
+    | head::tail -> 
+        let maxElement = findMaxRec head list
+        isInRange maxElement a b
+
+let isMaxInIntervalClassList list a b =
+    if List.isEmpty list then
+        false
+    else
+        let maxElement = List.max list
+        isInRange maxElement a b
 
 
 [<EntryPoint>]
@@ -116,5 +142,11 @@ let main args =
     let listAfterShiftClass = cyclicShiftRightClassList list
     Console.WriteLine("Список после сдвига вправо (методы List):")
     writeList listAfterShiftClass
+    let isMaxElemInterval = isMaxInInterval list 25 35
+    Console.WriteLine("Есть ли маскимальный элемент в интервале:")
+    Console.WriteLine(isMaxElemInterval)
+    let isMaxElemIntervalClassList = isMaxInIntervalClassList list 25 35
+    Console.WriteLine("Есть ли маскимальный элемент в интервале (методы List):")
+    Console.WriteLine(isMaxElemIntervalClassList)
 
     0
