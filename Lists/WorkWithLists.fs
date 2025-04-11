@@ -245,6 +245,47 @@ let filterAndSquareClassList list =
     |> List.map (fun (x, _) -> x * x)            // Возведение в квадрат
     |> List.distinct                             // Удаление дубликатов
 
+//Задание 17.
+// Проверка, является ли число полным квадратом любого элемента списка
+let isPerfectSquare n list =
+    let rec check = function
+        | [] -> false
+        | head :: tail -> head * head = n || check tail
+    check list
+
+// Проверка, делится ли число на все предыдущие элементы
+let divisibleByAllPrev n prevList =
+    let rec check = function
+        | [] -> true
+        | head :: tail -> n % head = 0 && check tail
+    check prevList
+
+// Подсчет элементов списка, больших заданного числа
+let countGreaterThan n list =
+    let rec count acc = function
+        | [] -> acc
+        | head :: tail -> count (if head > n then acc + 1 else acc) tail
+    count 0 list
+
+// Основная функция обработки списка
+let processList inputList =
+    let rec loop acc prevSum prevElems = function
+        | [] -> acc
+        | head :: tail ->
+            let isSquare = isPerfectSquare head inputList
+            let divisible = divisibleByAllPrev head prevElems
+            let greaterThanSum = head > prevSum
+            let count = countGreaterThan head inputList
+            
+            let newAcc = 
+                if isSquare && divisible && greaterThanSum then
+                    acc @ [(head, prevSum, count)]
+                else
+                    acc
+            
+            loop newAcc (prevSum + head) (prevElems @ [head]) tail
+    
+    loop [] 0 [] inputList
 
 
 [<EntryPoint>]
@@ -289,5 +330,7 @@ let main args =
     let listSquaresClassList = filterAndSquareClassList list
     Console.WriteLine("Список квадратов чисел (методы List):")
     writeList listSquaresClassList
-
+    let newList = processList list
+    Console.WriteLine("Список кортежей:")
+    writeList newList
     0
