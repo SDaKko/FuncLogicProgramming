@@ -204,6 +204,47 @@ let getAllPrimeDivisorsClassList list =
     |> List.distinct                  // Удаляем дубликаты
     |> List.sort                     // Сортируем
 
+//Задание 16. Дан список. Построить новый список из квадратов неотрицательных чисел, меньших 100 и встречающихся в массиве больше 2 раз.
+// Функция подсчета вхождений числа в список
+let countOccurrences num list =
+    let rec count acc = function
+        | [] -> acc
+        | head :: tail when head = num -> count (acc + 1) tail
+        | _ :: tail -> count acc tail
+    count 0 list
+
+// Функция проверки наличия элемента в списке
+let rec exists_el value = function
+    | [] -> false
+    | head :: tail -> head = value || exists_el value tail
+
+// Основная функция обработки
+let filterAndSquare list =
+    let rec processList acc = function
+        | [] -> acc
+        | head :: tail ->
+            if head >= 0 && head < 100 then
+                let cnt = countOccurrences head list
+                let squared = head * head
+                if cnt > 2 && not (exists_el squared acc) then
+                    processList (acc @ [squared]) tail
+                else
+                    processList acc tail
+            else
+                processList acc tail
+    
+    processList [] list
+
+//С использованием методов List
+// Основная функция с использованием List-методов
+let filterAndSquareClassList list =
+    list
+    |> List.filter (fun x -> x >= 0 && x < 100)  // Фильтрация по диапазону
+    |> List.countBy id                            // Подсчет вхождений, функция id возвращает свой же аргумент
+    |> List.filter (fun (x, count) -> count > 2)  // Фильтрация по количеству
+    |> List.map (fun (x, _) -> x * x)            // Возведение в квадрат
+    |> List.distinct                             // Удаление дубликатов
+
 
 
 [<EntryPoint>]
@@ -242,5 +283,11 @@ let main args =
     let listDivisorsClassList = getAllPrimeDivisorsClassList list
     Console.WriteLine("Список уникальных простых делителей чисел (методы List):")
     writeList listDivisorsClassList
+    let listSquares = filterAndSquare list
+    Console.WriteLine("Список квадратов чисел:")
+    writeList listSquares
+    let listSquaresClassList = filterAndSquareClassList list
+    Console.WriteLine("Список квадратов чисел (методы List):")
+    writeList listSquaresClassList
 
     0
