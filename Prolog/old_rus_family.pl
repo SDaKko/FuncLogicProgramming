@@ -9,6 +9,12 @@ man(dobrozhir).
 man(bogomil).
 man(zlatomir).
 
+man(anton).
+man(vasiliy).
+man(oleg).
+man(nikita).
+man(vladislav).
+
 woman(goluba).
 woman(lubomila).
 woman(bratislava).
@@ -18,6 +24,22 @@ woman(bozhedara).
 woman(broneslava).
 woman(veselina).
 woman(zdislava).
+
+woman(antonina).
+woman(ksenia).
+woman(olga).
+woman(marina).
+woman(aleksandra).
+
+parent(anton, voeneg).
+parent(anton, lubomila).
+parent(marina, voeneg).
+parent(marina, lubomila).
+
+parent(nikita, boguslav).
+parent(nikita, duhovlad).
+parent(antonina, boguslav).
+parent(antonina, duhovlad).
 
 parent(voeneg,ratibor).
 parent(voeneg,bratislava).
