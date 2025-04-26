@@ -1,42 +1,42 @@
 % Английские клубы
-club(manchester_united, 1, 2, 1, 4, 3). % 1878
-club(liverpool, 1, 1, 1, 4, 3).        % 1892
-club(arsenal, 1, 1, 1, 2, 3).          % 1886
-club(chelsea, 1, 1, 1, 3, 3).          % 1905
-club(manchester_city, 1, 1, 1, 1, 3).  % 1880
-club(tottenham, 1, 1, 1, 1, 2).        % 1882
-club(leicester, 1, 1, 1, 1, 2).        % 1884
-club(everton, 1, 1, 1, 1, 2).          % 1878
+club(manchester_united, 1, 2, 1, 4, 3).
+club(liverpool, 1, 1, 1, 4, 3).     
+club(arsenal, 1, 1, 1, 2, 3).         
+club(chelsea, 1, 1, 1, 3, 3).          
+club(manchester_city, 1, 1, 1, 1, 3). 
+club(tottenham, 1, 1, 1, 1, 2).      
+club(leicester, 1, 1, 1, 1, 2).     
+club(everton, 1, 1, 1, 1, 2).      
 
 % Испанские клубы
-club(real_madrid, 2, 1, 1, 4, 3).      % 1902
-club(barcelona, 2, 1, 1, 4, 3).        % 1899
-club(atletico_madrid, 2, 1, 1, 2, 3).  % 1903
-club(valencia, 2, 1, 1, 2, 2).         % 1919
+club(real_madrid, 2, 1, 1, 4, 3).    
+club(barcelona, 2, 1, 1, 4, 3).      
+club(atletico_madrid, 2, 1, 1, 2, 3). 
+club(valencia, 2, 1, 1, 2, 2).      
 
 % Немецкие клубы
-club(bayern_munich, 3, 1, 1, 4, 3).    % 1900
-club(borussia_dortmund, 3, 2, 1, 2, 3).% 1909
-club(schalke, 3, 1, 2, 1, 2).          % 1904
+club(bayern_munich, 3, 1, 1, 4, 3).   
+club(borussia_dortmund, 3, 2, 1, 2, 3).
+club(schalke, 3, 1, 2, 1, 2).         
 
 % Итальянские клубы
-club(juventus, 4, 1, 1, 3, 2).         % 1897
-club(milan, 4, 1, 1, 3, 2).            % 1899
-club(inter, 4, 1, 1, 3, 2).            % 1908
-club(roma, 4, 1, 1, 1, 2).             % 1927
+club(juventus, 4, 1, 1, 3, 2).        
+club(milan, 4, 1, 1, 3, 2).         
+club(inter, 4, 1, 1, 3, 2).          
+club(roma, 4, 1, 1, 1, 2).           
 
 % Французские клубы
-club(psg, 5, 3, 1, 1, 2).              % 1970
-club(marseille, 5, 1, 1, 1, 2).        % 1899
-club(lyon, 5, 2, 1, 1, 2).             % 1950
+club(psg, 5, 3, 1, 1, 2).         
+club(marseille, 5, 1, 1, 1, 2).       
+club(lyon, 5, 2, 1, 1, 2).             
 
 % Другие страны
-club(ajax, 6, 1, 1, 3, 2).             % Нидерланды, 1900
-club(porto, 6, 1, 1, 2, 2).            % Португалия, 1893
-club(benfica, 6, 1, 1, 2, 3).          % Португалия, 1904
-club(celtic, 6, 1, 1, 1, 2).           % Шотландия, 1887
-club(zenit, 6, 2, 1, 1, 2).            % Россия, 1925
-club(krasnodar, 6, 4, 1, 1, 2).            % Россия, 2008
+club(ajax, 6, 1, 1, 3, 2).        
+club(porto, 6, 1, 1, 2, 2).          
+club(benfica, 6, 1, 1, 2, 3).          
+club(celtic, 6, 1, 1, 1, 2).          
+club(zenit, 6, 2, 1, 1, 2).           
+club(krasnodar, 6, 4, 1, 1, 2).         
 
 question1(Country) :- write('Club country: '), nl,
     write('1: England, 2: Spain, 3: Germany, 4: Italy, 5: France, 6: Other'), nl,
