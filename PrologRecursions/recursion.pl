@@ -287,11 +287,11 @@ find_divisors(N, D, Acc, Divisors) :-
     ).
 
 % Фильтрация нечетных непростых делителей
-filter_odd_composite([], []).
+filter_odd_composite([], []) :- !.
 filter_odd_composite([H|T], [H|Rest]) :-
     H mod 2 =:= 1,
     not(prime(H)),
-    filter_odd_composite(T, Rest).
+    filter_odd_composite(T, Rest), !.
 filter_odd_composite([H|T], Rest) :-
     (H mod 2 =:= 0 ; prime(H)),
     filter_odd_composite(T, Rest).
@@ -304,4 +304,85 @@ show_result(N) :-
         write(N), write(' is '), write(Result), nl
     ;
         write('Error: number must be greater than 1'), nl
+    ).
+
+% Задание 6
+
+% Дан целочисленный массив. Необходимо вывести вначале его элементы с четными индексами, а затем - с нечетными.
+
+% Предикат вывода
+print_result(List) :-
+    separate_indices(List, Result),
+    write('Original list: '), write(List), nl,
+    write('Elements with even indices first: '), write(Result), nl.
+
+
+% Предикат логики: разделение элементов по четности индексов
+separate_indices(List, EvenOddList) :-
+    separate_indices(List, 0, [], [], EvenIndices, OddIndices),
+    append(EvenIndices, OddIndices, EvenOddList). %Добавляем нечетные элементы с нечетными индексами, результат в EvenOddList
+
+% Вспомогательный предикат с аккумуляторами
+separate_indices([], _, EvenAcc, OddAcc, EvenAcc, OddAcc) :- !.
+separate_indices([H|T], Index, EvenAcc, OddAcc, EvenIndices, OddIndices) :-
+    (Index mod 2 =:= 0 ->
+        append(EvenAcc, [H], NewEvenAcc),
+        NewOddAcc = OddAcc
+    ;
+        append(OddAcc, [H], NewOddAcc),
+        NewEvenAcc = EvenAcc
+    ),
+    NewIndex is Index + 1,
+    separate_indices(T, NewIndex, NewEvenAcc, NewOddAcc, EvenIndices, OddIndices).
+
+% Для введенного списка построить два списка L1 и L2, где элементы L1 это неповторяющиеся элементы исходного списка, а элемент списка L2 с номером i
+% показывает, сколько раз элемент списка L1 с таким номером повторяется в исходном.
+
+% Предикат вывода
+print_result_lists(List) :-
+    (count_elements(List, Unique, Counts) ->
+        write('Original list: '), write(List), nl,
+        write('Unique elements (L1): '), write(Unique), nl,
+        write('Counts (L2): '), write(Counts), nl
+    ;
+        write('Error: input must be a non-empty list'), nl
+    ).
+
+% Предикат логики: обработка списка
+count_elements(List, Unique, Counts) :-
+    get_unique(List, Unique),      % Получаем уникальные элементы
+    count_occurrences(List, Unique, Counts). % Считаем вхождения
+
+% Получение уникальных элементов в порядке первого вхождения
+get_unique([], []) :- !.
+get_unique([H|T], [H|Rest]) :-
+    remove_all(H, T, NewT),
+    get_unique(NewT, Rest).
+
+% Удаление всех вхождений элемента из списка
+remove_all(_, [], []) :- !.
+remove_all(X, [X|T], Rest) :-
+    remove_all(X, T, Rest), !.
+remove_all(X, [H|T], [H|Rest]) :-
+    X \= H,
+    remove_all(X, T, Rest).
+
+% Подсчет вхождений каждого уникального элемента
+count_occurrences(_, [], []).
+count_occurrences(List, [H|UniqueT], [Count|CountsT]) :-
+    count_element(List, H, Count),
+    count_occurrences(List, UniqueT, CountsT).
+
+% Подсчет количества вхождений элемента в список
+count_element(List, X, Count) :-
+    count_element_down(List, X, 0, Count).  % Инициализация аккумулятора
+
+% Основной рекурсивный предикат с аккумулятором
+count_element_down([], _, Acc, Acc) :- !.  % Базовый случай - возвращаем аккумулятор
+count_element_down([H|T], X, Acc, Count) :-
+    (H = X ->
+        NewAcc is Acc + 1,  % Увеличиваем счетчик
+        count_element_down(T, X, NewAcc, Count)
+    ;
+        count_element_down(T, X, Acc, Count)  % Аккумулятор не меняем
     ).
