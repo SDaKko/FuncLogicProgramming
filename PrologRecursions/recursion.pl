@@ -96,3 +96,114 @@ gcd(X, 0, X) :- !.
 
 % Основной рекурсивный случай (алгоритм Евклида)
 gcd(X, Y, Result) :- Y > 0, Rest is X mod Y, gcd(Y, Rest, Result).
+
+% Задание 3
+% Дан целочисленный массив и натуральный индекс (число, меньшее размера массива). Необходимо определить является ли элемент по указанному индексу глобальным максимумом.
+
+% Предикат чтения 
+% Используется для подготовки данных и запуска обработки
+check_global_max(List, Index, Result) :-
+    % Проверяем корректность индекса
+    length(List, Len),
+    Index < Len,
+    % Получаем элемент по индексу
+    get_element(List, Index, Element),
+    % Проверяем, является ли он глобальным максимумом
+    is_global_max(List, Element, Result).
+
+% Предикат логики работы (основная логика)
+% Проверяет, является ли элемент глобальным максимумом в списке
+is_global_max([], _, true).
+is_global_max([H|_], Element, false) :-
+    H > Element,
+    !.
+is_global_max([_|T], Element, Result) :-
+    is_global_max(T, Element, Result).
+
+% Предикат для получения элемента по индексу (вспомогательный)
+% Реализация через списки Черча
+get_element(List, Index, Element) :-
+    nth0(Index, List, Element). % Возвращает Element списка по заданному индексу
+
+% Предикат вывода
+
+print_result(List, Index) :-
+    check_global_max(List, Index, Result),
+    (
+        Result == true,
+        write('Element with index '),
+        write(Index),
+        write(' is global max'),
+        nl
+    ;
+        Result == false,
+        write('Element with index '),
+        write(Index),
+        write(' IS NOT global max'),
+        nl
+    ), !.
+
+% Дан целочисленный массив и натуральный индекс (число, меньшее размера массива). Необходимо определить является ли элемент по указанному индексу локальным минимумом.
+
+% Главный предикат
+is_local_min(List, Index, Result) :-
+    % Проверка корректности индекса
+    length(List, Len),
+    Index < Len,
+    Index >= 0,
+    % Получение элемента и его соседей
+    get_element(List, Index, Element), % Реализован для предыдущей задачи
+    get_neighbors(List, Index, Left, Right),
+    % Проверка условия локального минимума
+    check_local_min(Element, Left, Right, Result).
+
+% Предикат логики: проверка условия локального минимума
+check_local_min(Element, no_neighbor, Right, Result) :-
+    (Right >= Element -> Result = true ; Result = false), !.
+check_local_min(Element, Left, no_neighbor, Result) :-
+    (Left >= Element -> Result = true ; Result = false), !.
+check_local_min(Element, Left, Right, Result) :-
+    (Left >= Element, Right >= Element -> Result = true ; Result = false).
+
+get_neighbors(List, Index, Left, Right) :-
+    length(List, Length),
+    (Index =:= 0 -> Left = no_neighbor ; Prev is Index-1, nth0(Prev, List, Left)),
+    (Index =:= Length-1 -> Right = no_neighbor ; Next is Index+1, nth0(Next, List, Right)).
+
+% Предикат вывода
+print_local_min_result(List, Index) :-
+    is_local_min(List, Index, Result),
+    (
+        Result == true,
+        write('Element with index '),
+        write(Index),
+        write(' is local min'),
+        nl
+    ;
+        Result == false,
+        write('Element with index '),
+        write(Index),
+        write(' IS NOT local min'),
+        nl
+    ), !.
+
+% Дан целочисленный массив. Необходимо осуществить циклический сдвиг элементов массива влево на одну позицию.
+% Главный предикат
+cyclic_shift_left(List, ShiftedList) :-
+    % Проверка, что список не пустой
+    List \= [],
+    % Выполнение сдвига
+    perform_shift_left(List, ShiftedList).
+
+% Предикат логики: выполнение циклического сдвига
+perform_shift_left([Head|Tail], ShiftedList) :-
+    append(Tail, [Head], ShiftedList).  % Соединяем хвост с головой
+
+% Предикат вывода
+print_shifted_list(List) :-
+    (cyclic_shift_left(List, ShiftedList) ->
+        write('Original list: '), write(List), nl,
+        write('Shifted list: '), write(ShiftedList), nl
+    ;
+        write('Error: empty list'), nl), !.
+
