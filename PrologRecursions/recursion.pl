@@ -207,3 +207,101 @@ print_shifted_list(List) :-
     ;
         write('Error: empty list'), nl), !.
 
+% Задание 5
+
+% Найти максимальный простой делитель числа.
+
+% Главный предикат (интерфейс)
+max_prime_factor(N, Result) :-
+    N > 1,                     % Проверка ввода
+    find_prime_factors(N, 2, [], Factors),
+    max_member(Result, Factors). % Встроенный предикат для поиска максимума
+
+show_max_prime_factor(N) :-
+    (max_prime_factor(N, Result) ->
+        write('Max simple divider of number is '),
+        write(N), write(': '), write(Result), nl
+    ;
+        write('Error: the number must be bigger then 1'), nl
+    ).
+
+% Рекурсивный поиск простых делителей
+find_prime_factors(N, D, Acc, Factors) :-
+    (D > N -> 
+        Factors = Acc
+    ;
+        (N mod D =:= 0, prime(D) ->
+            NewAcc = [D|Acc],
+            NextD is D + 1
+        ;
+            NewAcc = Acc,
+            NextD is D + 1
+        ),
+        find_prime_factors(N, NextD, NewAcc, Factors)
+    ).
+
+% Проверка на простоту
+prime(2).
+prime(N) :-
+    N > 2,
+    not(has_divisor(N, 2)).
+
+% Проверка наличия делителей
+has_divisor(N, D) :-
+    D * D =< N, %Проверка делителей только до корня из N
+    (N mod D =:= 0 ; Next is D + 1, has_divisor(N, Next), !).
+
+%Найти НОД максимального нечетного непростого делителя числа и произведения цифр данного числа.
+
+%Рекурсия вниз, произведение цифр числа
+mult_digit_base(Num, Mult) :- mult_digit_down_base(Num, 1, Mult). %Аккумулятор посередине
+mult_digit_down_base(0, CurrentMult, CurrentMult) :- !.
+mult_digit_down_base(Num, CurrentMult, Result) :- Cifr is Num mod 10, N1 is Num div 10, New_cur_mult is CurrentMult * Cifr, mult_digit_down_base(N1, New_cur_mult, Result).
+
+% Главный предикат
+main_task(N, Result) :-
+    N > 1,
+    find_max_odd_composite_divisor(N, MaxDiv), % Поиск максимального нечетного непростого делителя
+    mult_digit_base(N, Product), % Произведение цифр числа
+    gcd(MaxDiv, Product, Result). %НОД максимального нечетного непростого делителя числа и произведения цифр данного числа, gcd реализован сверху в коде
+
+% Поиск максимального нечетного непростого делителя
+find_max_odd_composite_divisor(N, MaxDiv) :-
+    find_divisors(N, 1, [], Divisors),
+    filter_odd_composite(Divisors, Filtered),
+    max_member(MaxDiv, Filtered). % Встроенный предикат для поиска максимума в списке
+
+% Поиск всех делителей числа (рекурсивно)
+find_divisors(N, D, Acc, Divisors) :-
+    (D > N -> 
+        Divisors = Acc
+    ;
+        (N mod D =:= 0 ->
+            NewAcc = [D|Acc],
+            NextD is D + 1
+        ;
+            NewAcc = Acc,
+            NextD is D + 1
+        ),
+        find_divisors(N, NextD, NewAcc, Divisors)
+    ).
+
+% Фильтрация нечетных непростых делителей
+filter_odd_composite([], []).
+filter_odd_composite([H|T], [H|Rest]) :-
+    H mod 2 =:= 1,
+    not(prime(H)),
+    filter_odd_composite(T, Rest).
+filter_odd_composite([H|T], Rest) :-
+    (H mod 2 =:= 0 ; prime(H)),
+    filter_odd_composite(T, Rest).
+
+
+% Предикат вывода
+show_result(N) :-
+    (main_task(N, Result) ->
+        write('GCD of max odd composite divisor and digit product of '),
+        write(N), write(' is '), write(Result), nl
+    ;
+        write('Error: number must be greater than 1'), nl
+    ).
